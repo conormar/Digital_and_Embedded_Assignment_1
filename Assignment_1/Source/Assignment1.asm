@@ -16,8 +16,11 @@ MAIN:
 			LED    EQU     P3.4      ; P3.4 is red LED on eval board
 			SPKR   EQU     P3.6
 
+MYTABLE: DB      40,150,185,213,235,245,249,251	
+			MOV 	DPTR, 	#MYTABLE
+
 			MOV		IE, #0A0h	     ; enable timer 2 interrupt
-			MOV		RCAP2L, #00h
+			MOV		RCAP2L, #80h
 			SETB	TR2			     ; start timer 2
 
 ; ------ Loop forever ----------------------------------------------
