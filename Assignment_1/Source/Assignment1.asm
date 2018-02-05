@@ -11,12 +11,14 @@ CSEG
 
 			ORG		0060h			; set origin above interrupt addresses
 
+MYTABLE: 	DB      40,150,185,213,235,245,249,251
+
 MAIN:
 ; ------ Setup part - happens once only ----------------------------
 			LED    EQU     P3.4      ; P3.4 is red LED on eval board
 			SPKR   EQU     P3.6
 
-MYTABLE: DB      40,150,185,213,235,245,249,251	
+	
 			MOV 	DPTR, 	#MYTABLE
 
 			MOV		IE, #0A0h	     ; enable timer 2 interrupt
@@ -26,7 +28,7 @@ MYTABLE: DB      40,150,185,213,235,245,249,251
 ; ------ Loop forever ----------------------------------------------
 BLINK:
 			CPL   	LED     	   	; change state of red LED
-			JB		P2.1, ENABLE 	; enable timer 2 interrupt if switch 1 is high
+			JB		P2.0, ENABLE 	; enable timer 2 interrupt if switch 1 is high
 			MOV		IE, #80h		; disable timer 2 interrupt otherwise
 			JMP		CONTINUE
 ENABLE:
@@ -50,7 +52,9 @@ DLY1:
 ; ------ Interrupt service routine ---------------------------------
 T2ISR:		CLR	  	TR2				; stop timer
 			CPL	  	P3.6			; flip the bit generating output
-			MOV   	A, P2			; move the value of port 2(the switches) to A
+			CLR		A				; Clear the accumulator
+			MOV		A, P2
+			ANL		A, #111b
 			MOVC  	A, @A+DPTR		; move the corresponding table value to A
 			MOV   	RCAP2H, A		; move the table value to the reload register
 			SETB  	TR2				; resume the timer
