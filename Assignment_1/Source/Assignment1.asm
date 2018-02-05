@@ -11,14 +11,14 @@ CSEG
 
 			ORG		0060h			; set origin above interrupt addresses
 
-MYTABLE: 	DB      40,150,185,213,235,245,249,251
+MYTABLE: 	DB      40,170,213,235,246,249,251,252
 
 MAIN:
 ; ------ Setup part - happens once only ----------------------------
 			LED    EQU     P3.4      ; P3.4 is red LED on eval board
 			SPKR   EQU     P3.6
 
-	
+
 			MOV 	DPTR, 	#MYTABLE
 
 			MOV		IE, #0A0h	     ; enable timer 2 interrupt
